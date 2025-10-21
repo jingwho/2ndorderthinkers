@@ -13,17 +13,19 @@
   --white: #f3f5f9;
   --gray: #c7c9cd;
 }
+
 body {
   font-family: 'Inter', sans-serif;
   background: var(--white);
   color: var(--black);
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
+
 .header {
-  margin-top: 20px;
+  margin-top: 28px;
   margin-bottom: 10px;
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 600;
   text-align: center;
 }
@@ -36,40 +38,48 @@ body {
   color: var(--yellow);
   border-bottom: 2px solid var(--yellow);
 }
+
 .layout {
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  gap: 32px;
 }
+
 #bingo-container {
-  margin-top: 20px;
-  padding: 20px;
+  padding: 6px 14px;
   background: var(--white);
-  max-width: 1100px;
-  width: 100%;
+  max-width: 950px;
+  width: 950px;
 }
+
 #bingo-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 14px;
   width: 100%;
 }
+
 .square {
   background: white;
   border: 1px solid var(--gray);
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 14px 8px;
+  min-height: 110px;
+  height: 110px;
+  max-height: 110px;
+  font-size: 16px;
+  line-height: 1.18;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 15px;
-  min-height: 56px;
   font-family: 'Inter', sans-serif;
-  line-height: 1.24;
+  box-sizing: border-box;
 }
+
 .square:hover {
   background: var(--black);
   color: var(--yellow);
@@ -78,66 +88,84 @@ body {
   background: var(--yellow);
   color: var(--black);
   font-weight: 600;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
 }
+
 .sidebar {
+  background: #f3f5f9;
+  border-radius: 8px;
+  padding: 21px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 32px;
-  margin-top: 16px;
+  min-width: 170px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.score-block {
+  margin-bottom: 14px;
+  text-align: center;
 }
 #score {
-  margin-bottom: 26px;
   font-size: 1.2rem;
   font-weight: 600;
+  margin-bottom: 6px;
 }
+.caption {
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 18px;
+}
+
 .share-container {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   justify-content: flex-start;
+  align-items: stretch;
+  width: 100%;
 }
 .share-btn {
   background: var(--black);
   color: var(--white);
   border: none;
   border-radius: 6px;
-  padding: 10px 18px;
+  padding: 9px 0;
   cursor: pointer;
   font-size: 15px;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   transition: all 0.2s ease;
   text-decoration: none;
-  display: inline-block;
-  width: 130px;
+  display: block;
+  width: 100%;
   text-align: center;
 }
 .share-btn:hover {
   background: var(--yellow);
   color: var(--black);
 }
-
-@media (max-width: 1040px) {
+@media (max-width: 1050px) {
   .layout {
     flex-direction: column;
     align-items: center;
-  }
-  .sidebar {
-    margin-left: 0;
-    margin-top: 22px;
-    flex-direction: row;
     gap: 18px;
   }
-  .share-container {
-    flex-direction: row;
-    gap: 14px;
-  }
-  #score {
-    margin-bottom: 0;
+  #bingo-container {
+    width: 98vw;
+    max-width: 98vw;
+    padding: 2vw;
   }
   #bingo-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .sidebar {
+    margin-top: 10px;
+    padding: 14px 8vw;
+    min-width: 55vw;
+    width: 90vw;
   }
 }
 </style>
@@ -151,7 +179,10 @@ body {
       <div id="bingo-grid"></div>
     </div>
     <div class="sidebar">
-      <div id="score">0 / 25</div>
+      <div class="score-block">
+        <div id="score"><span id="score-num">0</span> / 25</div>
+        <div class="caption">Share your score with your team</div>
+      </div>
       <div class="share-container">
         <button class="share-btn" id="share-linkedin">LinkedIn</button>
         <button class="share-btn" id="share-x">X</button>
@@ -188,7 +219,9 @@ const squares = [
   "Interdisciplinary team regularly reviews AI impact together"
 ];
 const grid = document.getElementById("bingo-grid");
-const scoreDisplay = document.getElementById("score");
+const scoreDisplay = document.getElementById("score-num");
+
+// Render squares
 squares.forEach(text => {
   const div = document.createElement("div");
   div.classList.add("square");
@@ -199,28 +232,31 @@ squares.forEach(text => {
   });
   grid.appendChild(div);
 });
+
 function updateScore() {
   const selected = document.querySelectorAll(".square.active").length;
-  scoreDisplay.textContent = `${selected} / 25`;
+  scoreDisplay.textContent = `${selected}`;
 }
+
+// Social + Screenshot functions unchanged (see previous best practice note)
+// This section downloads image and opens platform share dialog, but cannot auto-attach image due to web/social API limits
+
 async function captureAndShare(platform) {
   const score = scoreDisplay.textContent;
   const container = document.getElementById("bingo-container");
   const url = "https://jingwho.github.io/2ndorderthinkers/";
-  const shareText = `Our team scored ${score} on AI Responsibility–Literacy–Process. Are you actually ready? ${url}`;
+  const shareText = `Our team scored ${score} / 25 on AI Responsibility–Literacy–Process. Are you actually ready? ${url}`;
   try {
     const canvas = await html2canvas(container, {
       backgroundColor: '#f3f5f9',
       scale: 2
     });
     canvas.toBlob(async (blob) => {
-      // Platform-specific actions: download, open share text in new tab.
       const downloadUrl = canvas.toDataURL();
       const link = document.createElement('a');
       link.download = 'ai-readiness-bingo.png';
       link.href = downloadUrl;
       link.click();
-      // Compose links for social
       if (platform === 'linkedin') {
         window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
       } else if (platform === 'x') {
@@ -230,12 +266,4 @@ async function captureAndShare(platform) {
       }
     });
   } catch (err) {
-    alert('Could not generate screenshot. Please take a screenshot manually.');
-  }
-}
-document.getElementById("share-linkedin").addEventListener("click", () => captureAndShare('linkedin'));
-document.getElementById("share-x").addEventListener("click", () => captureAndShare('x'));
-document.getElementById("share-threads").addEventListener("click", () => captureAndShare('threads'));
-</script>
-</body>
-</html>
+    alert('Could not generate
