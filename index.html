@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Responsibility–Literacy–Process Bingo</title>
+<title>Are You Actually Ready for AI? (Probably Not)</title>
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -22,55 +22,56 @@ body {
   background: var(--white);
   color: var(--black);
   margin: 0;
-  padding: 0;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
 }
-h1 {
-  margin-top: 40px;
-  font-size: 2rem;
+.header {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.4rem;
   font-weight: 600;
   text-align: center;
 }
-.subtitle {
-  margin-top: 8px;
-  font-size: 1rem;
-  font-weight: 400;
-}
-.subtitle a {
+.header a {
   color: var(--black);
-  text-decoration: underline;
+  text-decoration: none;
+  border-bottom: 2px solid var(--black);
 }
-.subtitle a:hover {
+.header a:hover {
   color: var(--yellow);
+  border-bottom: 2px solid var(--yellow);
 }
 #bingo-container {
-  margin-top: 30px;
+  margin-top: 20px;
   padding: 20px;
   background: var(--white);
+  max-width: 1100px;
+  width: 100%;
 }
 #bingo-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-gap: 10px;
-  max-width: 900px;
+  grid-gap: 12px;
+  width: 100%;
 }
 .square {
   background: white;
   border: 1px solid var(--gray);
   border-radius: 8px;
-  padding: 18px;
+  padding: 20px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 15px;
-  min-height: 110px;
+  font-size: 16px;
+  min-height: 100px;
   font-family: 'Inter', sans-serif;
+  line-height: 1.4;
 }
 .square:hover {
   background: var(--black);
@@ -82,40 +83,64 @@ h1 {
   font-weight: 600;
 }
 #score {
-  margin-top: 25px;
+  margin-top: 20px;
   font-size: 1.4rem;
   font-weight: 600;
 }
-button {
+.share-container {
   margin-top: 20px;
   margin-bottom: 40px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.share-btn {
   background: var(--black);
   color: var(--white);
   border: none;
   border-radius: 6px;
-  padding: 12px 20px;
+  padding: 12px 24px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  transition: background 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
 }
-button:hover {
+.share-btn:hover {
   background: var(--yellow);
   color: var(--black);
+}
+
+@media (max-width: 900px) {
+  #bingo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .header {
+    font-size: 1.1rem;
+  }
 }
 </style>
 </head>
 
 <body>
-<h1>AI Responsibility – Literacy – Process Bingo</h1>
-<div class="subtitle">by <a href="https://www.2ndorderthinkers.com/" target="_blank">2nd Order Thinkers</a></div>
+<div class="header">
+  Are You Actually Ready for AI? (Probably Not) by <a href="https://www.2ndorderthinkers.com/" target="_blank">2nd Order Thinkers</a>
+</div>
 
 <div id="bingo-container">
   <div id="bingo-grid"></div>
 </div>
 
 <div id="score">0 / 25</div>
-<button id="share">Share my score</button>
+
+<div class="share-container">
+  <button class="share-btn" id="share-linkedin">Share on LinkedIn</button>
+  <button class="share-btn" id="share-x">Share on X</button>
+  <button class="share-btn" id="share-threads">Share on Threads</button>
+</div>
 
 <script>
 const squares = [
@@ -170,47 +195,49 @@ function updateScore() {
   scoreDisplay.textContent = `${selected} / 25`;
 }
 
-document.getElementById("share").addEventListener("click", async () => {
+async function captureAndShare(platform) {
   const score = scoreDisplay.textContent;
   const container = document.getElementById("bingo-container");
+  const url = "https://jingwho.github.io/2ndorderthinkers/";
+  
+  const shareText = `Our team scored ${score} on AI Responsibility–Literacy–Process. Are you actually ready? ${url}`;
   
   try {
-    // Capture the bingo grid as an image
     const canvas = await html2canvas(container, {
       backgroundColor: '#f3f5f9',
       scale: 2
     });
     
-    // Convert to blob
     canvas.toBlob(async (blob) => {
-      const file = new File([blob], 'bingo-score.png', { type: 'image/png' });
-      const shareData = {
-        title: 'AI Responsibility–Literacy–Process Bingo',
-        text: `Our team scored ${score} on Responsibility–Literacy–Process Bingo by 2nd Order Thinkers`,
-        files: [file]
-      };
+      const file = new File([blob], 'ai-readiness-bingo.png', { type: 'image/png' });
       
-      // Check if Web Share API with files is supported
-      if (navigator.canShare && navigator.canShare(shareData)) {
-        await navigator.share(shareData);
-      } else {
-        // Fallback: download the image
-        const url = canvas.toDataURL();
-        const link = document.createElement('a');
-        link.download = 'bingo-score.png';
-        link.href = url;
-        link.click();
-        
-        // Copy text to clipboard
-        await navigator.clipboard.writeText(`Our team scored ${score} on Responsibility–Literacy–Process Bingo by 2nd Order Thinkers. https://jingwho.github.io/2ndorderthinkers/`);
-        alert('Screenshot downloaded! Share text copied to clipboard.');
+      // Platform-specific sharing
+      if (platform === 'linkedin') {
+        // LinkedIn doesn't support direct Web Share, open share dialog
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+      } else if (platform === 'x') {
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+      } else if (platform === 'threads') {
+        window.open(`https://threads.net/intent/post?text=${encodeURIComponent(shareText)}`, '_blank');
       }
+      
+      // Also download image for manual upload
+      const downloadUrl = canvas.toDataURL();
+      const link = document.createElement('a');
+      link.download = 'ai-readiness-bingo.png';
+      link.href = downloadUrl;
+      link.click();
+      
     });
   } catch (err) {
     console.error('Share failed:', err);
-    alert('Could not share. Please take a screenshot manually.');
+    alert('Could not generate screenshot. Please try again.');
   }
-});
+}
+
+document.getElementById("share-linkedin").addEventListener("click", () => captureAndShare('linkedin'));
+document.getElementById("share-x").addEventListener("click", () => captureAndShare('x'));
+document.getElementById("share-threads").addEventListener("click", () => captureAndShare('threads'));
 </script>
 </body>
 </html>
