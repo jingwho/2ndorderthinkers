@@ -3,18 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Are You Actually Ready for AI? (Probably Not)</title>
+<title>Are You Actually Ready for AI?</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root {
   --black: #020301;
   --yellow: #ffdb15;
   --white: #f3f5f9;
   --gray: #c7c9cd;
-}
-* {
-  box-sizing: border-box;
 }
 body {
   font-family: 'Inter', sans-serif;
@@ -24,12 +20,10 @@ body {
   padding: 20px;
 }
 .header {
-  margin-top: 10px;
-  margin-bottom: 20px;
+  text-align: center;
+  margin: 20px 0;
   font-size: 1.3rem;
   font-weight: 600;
-  text-align: center;
-  line-height: 1.4;
 }
 .header a {
   color: var(--black);
@@ -38,153 +32,112 @@ body {
 }
 .header a:hover {
   color: var(--yellow);
-  border-bottom: 2px solid var(--yellow);
+  border-bottom-color: var(--yellow);
 }
 .container {
   max-width: 1400px;
   margin: 0 auto;
-}
-.layout {
   display: flex;
   gap: 30px;
-  align-items: flex-start;
 }
-#bingo-container {
+.grid-wrapper {
   flex: 1;
 }
-#bingo-grid {
+.grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 12px;
 }
-.square {
+.card {
   background: white;
   border: 1px solid var(--gray);
   border-radius: 8px;
   padding: 16px 12px;
+  min-height: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
   font-size: 14px;
-  min-height: 110px;
   line-height: 1.3;
+  cursor: pointer;
+  transition: 0.2s;
 }
-.square:hover {
+.card:hover {
   background: var(--black);
   color: var(--yellow);
 }
-.square.active {
+.card.selected {
   background: var(--yellow);
   color: var(--black);
   font-weight: 600;
 }
 .sidebar {
+  width: 220px;
   background: white;
   border: 1px solid var(--gray);
   border-radius: 8px;
   padding: 24px 20px;
-  width: 220px;
-  flex-shrink: 0;
   position: sticky;
   top: 20px;
+  height: fit-content;
 }
-.score-block {
-  text-align: center;
-  margin-bottom: 24px;
-}
-#score {
+.score {
   font-size: 2.2rem;
   font-weight: 600;
+  text-align: center;
   margin-bottom: 10px;
-  line-height: 1;
 }
 .caption {
   font-size: 13px;
   color: #666;
-  line-height: 1.4;
+  text-align: center;
+  margin-bottom: 24px;
 }
-.share-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.share-btn {
+.btn {
+  display: block;
+  width: 100%;
   background: var(--black);
   color: var(--white);
   border: none;
   border-radius: 6px;
-  padding: 12px 20px;
-  cursor: pointer;
+  padding: 12px;
+  margin-bottom: 12px;
   font-size: 14px;
   font-weight: 600;
   font-family: 'Inter', sans-serif;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: 0.2s;
 }
-.share-btn:hover {
+.btn:hover {
   background: var(--yellow);
   color: var(--black);
 }
-
 @media (max-width: 1200px) {
-  .layout {
-    flex-direction: column;
-    align-items: center;
-  }
-  .sidebar {
-    position: static;
-    width: 100%;
-    max-width: 500px;
-    margin-top: 30px;
-  }
-  .share-container {
-    flex-direction: row;
-    justify-content: center;
-  }
-  #bingo-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  #bingo-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .header {
-    font-size: 1.1rem;
-  }
+  .container { flex-direction: column; align-items: center; }
+  .sidebar { position: static; width: 100%; max-width: 500px; margin-top: 30px; }
+  .grid { grid-template-columns: repeat(3, 1fr); }
 }
 </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      Are You Actually Ready for AI? (Probably Not) by <a href="https://www.2ndorderthinkers.com/" target="_blank">2nd Order Thinkers</a>
-    </div>
-    
-    <div class="layout">
-      <div id="bingo-container">
-        <div id="bingo-grid"></div>
-      </div>
-      
-      <div class="sidebar">
-        <div class="score-block">
-          <div id="score">0 / 25</div>
-          <div class="caption">Share your score with your team</div>
-        </div>
-        <div class="share-container">
-          <button class="share-btn" id="share-linkedin">LinkedIn</button>
-          <button class="share-btn" id="share-x">X</button>
-          <button class="share-btn" id="share-threads">Threads</button>
-        </div>
-      </div>
-    </div>
+<div class="header">
+  Are You Actually Ready for AI? (Probably Not) by <a href="https://www.2ndorderthinkers.com/" target="_blank">2nd Order Thinkers</a>
+</div>
+<div class="container">
+  <div class="grid-wrapper">
+    <div class="grid" id="grid"></div>
   </div>
-
+  <div class="sidebar">
+    <div class="score" id="score">0 / 25</div>
+    <div class="caption">Share your score with your team</div>
+    <button class="btn" onclick="share('linkedin')">LinkedIn</button>
+    <button class="btn" onclick="share('x')">X</button>
+    <button class="btn" onclick="share('threads')">Threads</button>
+  </div>
+</div>
 <script>
-const squares = [
+const items = [
   "Named owner for every AI loop decision (not a committee)",
   "Audit trail exists for model outputs and human overrides",
   "Each AI step mapped to 'in / over / out of loop' for explainability",
@@ -212,38 +165,39 @@ const squares = [
   "Interdisciplinary team regularly reviews AI impact together"
 ];
 
-const grid = document.getElementById("bingo-grid");
-const scoreDisplay = document.getElementById("score");
+const grid = document.getElementById('grid');
+const scoreEl = document.getElementById('score');
 
-// Render grid
-squares.forEach(text => {
-  const div = document.createElement("div");
-  div.classList.add("square");
-  div.textContent = text;
-  div.addEventListener("click", () => {
-    div.classList.toggle("active");
+items.forEach(text => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.textContent = text;
+  card.onclick = () => {
+    card.classList.toggle('selected');
     updateScore();
-  });
-  grid.appendChild(div);
+  };
+  grid.appendChild(card);
 });
 
 function updateScore() {
-  const selected = document.querySelectorAll(".square.active").length;
-  scoreDisplay.textContent = `${selected} / 25`;
+  const count = document.querySelectorAll('.card.selected').length;
+  scoreEl.textContent = count + ' / 25';
 }
 
-async function captureAndShare(platform) {
-  const score = scoreDisplay.textContent;
-  const container = document.getElementById("bingo-container");
-  const url = "https://jingwho.github.io/2ndorderthinkers/";
-  const shareText = `Our team scored ${score} on AI Responsibility–Literacy–Process. Are you actually ready? ${url}`;
+function share(platform) {
+  const count = document.querySelectorAll('.card.selected').length;
+  const url = 'https://jingwho.github.io/2ndorderthinkers/';
+  const text = `Our team scored ${count}/25 on AI Responsibility–Literacy–Process. Are you actually ready? ${url}`;
   
-  try {
-    const canvas = await html2canvas(container, {
-      backgroundColor: '#f3f5f9',
-      scale: 2
-    });
-    
-    canvas.toBlob(async (blob) => {
-      const downloadUrl = canvas.toDataURL();
-      const link = document.createElement('a');
+  if (platform === 'linkedin') {
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url), '_blank');
+  } else if (platform === 'x') {
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
+  } else if (platform === 'threads') {
+    window.open('https://threads.net/intent/post?text=' + encodeURIComponent(text), '_blank');
+  }
+  alert('Share link opened! Screenshot the grid to attach to your post.');
+}
+</script>
+</body>
+</html>
