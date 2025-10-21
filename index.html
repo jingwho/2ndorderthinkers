@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Responsibility–Literacy–Process Bingo</title>
+<title>AI Responsibility–Literacy–Process Bingo</title>
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<!-- html2canvas for screenshot -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
 :root {
   --black: #020301;
@@ -27,31 +30,51 @@ body {
 }
 h1 {
   margin-top: 40px;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 600;
+  text-align: center;
+}
+.subtitle {
+  margin-top: 8px;
+  font-size: 1rem;
+  font-weight: 400;
+}
+.subtitle a {
+  color: var(--black);
+  text-decoration: underline;
+}
+.subtitle a:hover {
+  color: var(--yellow);
+}
+#bingo-container {
+  margin-top: 30px;
+  padding: 20px;
+  background: var(--white);
 }
 #bingo-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 10px;
   max-width: 900px;
-  margin-top: 30px;
 }
 .square {
   background: white;
   border: 1px solid var(--gray);
   border-radius: 8px;
-  padding: 14px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 14px;
-  min-height: 90px;
+  font-size: 15px;
+  min-height: 110px;
+  font-family: 'Inter', sans-serif;
 }
 .square:hover {
-  background: var(--yellow);
-  color: var(--black);
-  font-family: 'Impact', sans-serif;
+  background: var(--black);
+  color: var(--yellow);
 }
 .square.active {
   background: var(--yellow);
@@ -60,18 +83,20 @@ h1 {
 }
 #score {
   margin-top: 25px;
-  font-size: 1.2rem;
-  font-family: 'Impact', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 button {
   margin-top: 20px;
+  margin-bottom: 40px;
   background: var(--black);
   color: var(--white);
   border: none;
   border-radius: 6px;
-  padding: 10px 16px;
+  padding: 12px 20px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   transition: background 0.2s ease;
 }
 button:hover {
@@ -82,8 +107,13 @@ button:hover {
 </head>
 
 <body>
-<h1>Responsibility – Literacy – Process Bingo</h1>
-<div id="bingo-grid"></div>
+<h1>AI Responsibility – Literacy – Process Bingo</h1>
+<div class="subtitle">by <a href="https://www.2ndorderthinkers.com/" target="_blank">2nd Order Thinkers</a></div>
+
+<div id="bingo-container">
+  <div id="bingo-grid"></div>
+</div>
+
 <div id="score">0 / 25</div>
 <button id="share">Share my score</button>
 
@@ -92,13 +122,13 @@ const squares = [
   // Governance
   "Named owner for every AI loop decision (not a committee)",
   "Audit trail exists for model outputs and human overrides",
-  "Each AI app mapped to 'in / over / out of loop' with clear accountability",
-  "Explainability standards set for devs, execs, and end users",
+  "Each AI step mapped to 'in / over / out of loop' for explainability",
+  "Explainability standards set for everyone involved in an AI step",
   "Risk sign-off by a human with a name, not a department",
   // Literacy
   "Role-based AI literacy paths exist for all who touch AI",
-  "EU AI Act literacy documented by each functional team",
-  "Managers trained to critically evaluate AI outputs",
+  "AI literacy documented by each functional team",
+  "Managers can critically evaluate AI outputs",
   "Literacy measured by skill demonstration, not course completions",
   "Leadership completes the same literacy track as everyone else",
   // Process / Architecture
@@ -109,9 +139,9 @@ const squares = [
   "Each agent has a defined purpose and scope—no orphaned bots",
   // Measurement
   "Touchless and exception rates tracked at process level",
-  "Analyst time reallocated from processing to judgment (Human-value KPI)",
-  "Each pilot includes measurement and rollback planning",
-  "Post-AI performance equals or improves on pre-AI KPIs",
+  "Time reallocated from processing to judgment?",
+  "Each pilot includes measurement and rollback planned",
+  "Post-AI performance equals pre-AI KPIs",
   "Governance reviews follow every major AI incident",
   // Culture
   "AI strategy embedded in real operating cadence, not a vanity team",
@@ -142,11 +172,43 @@ function updateScore() {
 
 document.getElementById("share").addEventListener("click", async () => {
   const score = scoreDisplay.textContent;
+  const container = document.getElementById("bingo-container");
+  
   try {
-    await navigator.clipboard.writeText(`Our team scored ${score} on Responsibility–Literacy–Process Bingo.`);
-    alert(`Copied to clipboard!\nShare this with your team: ${score}`);
+    // Capture the bingo grid as an image
+    const canvas = await html2canvas(container, {
+      backgroundColor: '#f3f5f9',
+      scale: 2
+    });
+    
+    // Convert to blob
+    canvas.toBlob(async (blob) => {
+      const file = new File([blob], 'bingo-score.png', { type: 'image/png' });
+      const shareData = {
+        title: 'AI Responsibility–Literacy–Process Bingo',
+        text: `Our team scored ${score} on Responsibility–Literacy–Process Bingo by 2nd Order Thinkers`,
+        files: [file]
+      };
+      
+      // Check if Web Share API with files is supported
+      if (navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: download the image
+        const url = canvas.toDataURL();
+        const link = document.createElement('a');
+        link.download = 'bingo-score.png';
+        link.href = url;
+        link.click();
+        
+        // Copy text to clipboard
+        await navigator.clipboard.writeText(`Our team scored ${score} on Responsibility–Literacy–Process Bingo by 2nd Order Thinkers. https://jingwho.github.io/2ndorderthinkers/`);
+        alert('Screenshot downloaded! Share text copied to clipboard.');
+      }
+    });
   } catch (err) {
-    alert("Could not copy to clipboard.");
+    console.error('Share failed:', err);
+    alert('Could not share. Please take a screenshot manually.');
   }
 });
 </script>
