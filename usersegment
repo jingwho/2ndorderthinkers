@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2nd Order Thinkers - Subscriber Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Impact&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-black: #020301;
+            --primary-yellow: #ffdb15;
+            --light-gray: #f3f5f9;
+            --medium-gray: #d1d3d4;
+            --dark-gray: #666769;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--white);
+            color: var(--primary-black);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Impact', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        header {
+            background-color: var(--primary-black);
+            color: var(--white);
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: 'Impact', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary-yellow);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: var(--light-gray);
+            margin-top: 0.5rem;
+            font-weight: 300;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary-black) 0%, var(--dark-gray) 100%);
+            color: var(--white);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-yellow);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .total-subscribers {
+            background: var(--white);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .total-number {
+            font-family: 'Impact', sans-serif;
+            font-size: 5rem;
+            color: var(--primary-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .total-label {
+            font-size: 1.5rem;
+            color: var(--dark-gray);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .platform-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .platform-item {
+            text-align: center;
+        }
+
+        .platform-number {
+            font-family: 'Impact', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary-black);
+        }
+
+        .platform-name {
+            font-size: 1rem;
+            color: var(--dark-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        .platform-percentage {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            font-weight: 300;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-yellow);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-family: 'Impact', sans-serif;
+            font-size: 3rem;
+            color: var(--primary-black);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--dark-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-description {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .chart-section {
+            background-color: var(--light-gray);
+            padding: 4rem 0;
+            margin: 3rem 0;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .chart-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-family: 'Impact', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-black);
+            border-left: 4px solid var(--primary-yellow);
+            padding-left: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Impact', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-black);
+        }
+
+        .insights {
+            background-color: var(--white);
+            padding: 3rem 0;
+        }
+
+        .insight-card {
+            background: var(--light-gray);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-yellow);
+        }
+
+        .insight-card h3 {
+            font-family: 'Impact', sans-serif;
+            color: var(--primary-black);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .insight-card p {
+            color: var(--dark-gray);
+            line-height: 1.8;
+        }
+
+        footer {
+            background-color: var(--primary-black);
+            color: var(--light-gray);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .footer-brand {
+            font-family: 'Impact', sans-serif;
+            color: var(--primary-yellow);
+            font-size: 1.2rem;
+        }
+
+        canvas {
+            max-height: 350px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .total-number {
+                font-size: 3.5rem;
+            }
+
+            .platform-breakdown {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <div class="logo">2nd Order Thinkers</div>
+                    <div class="subtitle">Subscriber Analysis Dashboard</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Subscriber Analytics</h1>
+            <p>Understanding the audience behind 2nd Order Thinkers newsletter</p>
+        </div>
+    </section>
+
+    <section class="total-subscribers">
+        <div class="container">
+            <div class="total-number" data-target="2373">0</div>
+            <div class="total-label">Total Subscribers</div>
+            
+            <div class="platform-breakdown">
+                <div class="platform-item">
+                    <div class="platform-number" data-target="1637">0</div>
+                    <div class="platform-name">Substack</div>
+                    <div class="platform-percentage">69%</div>
+                </div>
+                <div class="platform-item">
+                    <div class="platform-number" data-target="634">0</div>
+                    <div class="platform-name">Medium</div>
+                    <div class="platform-percentage">27%</div>
+                </div>
+                <div class="platform-item">
+                    <div class="platform-number" data-target="102">0</div>
+                    <div class="platform-name">LinkedIn</div>
+                    <div class="platform-percentage">4%</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="460">0</div>
+                    <div class="stat-label">Enriched Profiles</div>
+                    <div class="stat-description">19% of subscribers with detailed professional data</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="193">0</div>
+                    <div class="stat-label">Decision Makers</div>
+                    <div class="stat-description">VP-level and C-suite professionals (42% of enriched)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="212">0</div>
+                    <div class="stat-label">Tech & Product</div>
+                    <div class="stat-description">Technology and product professionals (46% of enriched)</div>
+                </div>
+            </div>
+        </div>
+
+        <section class="chart-section">
+            <div class="container">
+                <h2 class="section-title">Audience Segmentation</h2>
+                
+                <div class="chart-grid">
+                    <div class="chart-container">
+                        <h3 class="chart-title">Geographic Distribution</h3>
+                        <canvas id="geoChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="chart-title">Department Breakdown</h3>
+                        <canvas id="departmentChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="chart-title">Gender Distribution</h3>
+                        <canvas id="genderChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="chart-title">Company Size</h3>
+                        <canvas id="companySizeChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="chart-title">Seniority Level</h3>
+                        <canvas id="seniorityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="insights">
+            <div class="container">
+                <h2 class="section-title">Key Insights</h2>
+                
+                <div class="insight-card">
+                    <h3>🎯 High-Quality Audience Composition</h3>
+                    <p>The subscriber base includes <strong>42% decision-makers</strong> (VP-level and above), representing 193 senior professionals. This high concentration of leadership positions demonstrates strong appeal among influential thought leaders and decision-makers in the 2nd Order Thinkers community.</p>
+                </div>
+
+                <div class="insight-card">
+                    <h3>💼 Tech & Product-Focused Readership</h3>
+                    <p><strong>46% of enriched subscribers work in Technology and Product</strong> (212 professionals). This includes engineers, developers, product managers, and designers—a highly engaged audience particularly receptive to innovation-focused content and strategic thinking frameworks.</p>
+                </div>
+
+                <div class="insight-card">
+                    <h3>🌍 US-Centric with Global Reach</h3>
+                    <p>Over <strong>half of the audience (52%) is based in the United States</strong>, with significant presence in UK (9%), India (7%), and Canada (6%). The newsletter has reached readers in 50+ countries, demonstrating global appeal while maintaining strong roots in North American markets.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="footer-brand">2ND ORDER THINKERS</p>
+            <p class="footer-text">Subscriber Analysis Dashboard &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // Number animation function
+        function animateNumber(element) {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000;
+            const frameDuration = 1000 / 60;
+            const totalFrames = Math.round(duration / frameDuration);
+            let frame = 0;
+
+            const counter = setInterval(() => {
+                frame++;
+                const progress = frame / totalFrames;
+                const currentCount = Math.round(target * easeOutQuad(progress));
+                
+                element.textContent = currentCount.toLocaleString();
+
+                if (frame === totalFrames) {
+                    clearInterval(counter);
+                    element.textContent = target.toLocaleString();
+                }
+            }, frameDuration);
+        }
+
+        function easeOutQuad(t) {
+            return t * (2 - t);
+        }
+
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    animateNumber(entry.target);
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const numbers = document.querySelectorAll('[data-target]');
+            numbers.forEach(num => observer.observe(num));
+        });
+
+        // Geographic Distribution - Pie Chart
+        const geoCtx = document.getElementById('geoChart').getContext('2d');
+        new Chart(geoCtx, {
+            type: 'pie',
+            data: {
+                labels: ['United States (52%)', 'United Kingdom (9%)', 'India (7%)', 'Canada (6%)', 'Australia (4%)', 'Other (22%)'],
+                datasets: [{
+                    data: [52, 9, 7, 6, 4, 22],
+                    backgroundColor: ['#020301', '#2a2b2d', '#3f4143', '#555759', '#666769', '#939496'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 12,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Department Chart
+        const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+        new Chart(departmentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Tech &\nEngineering', 'Product &\nDesign', 'Data &\nAnalytics', 'Executive &\nLeadership', 'Operations &\nStrategy', 'Marketing &\nGrowth', 'Sales &\nBD', 'Other'],
+                datasets: [{
+                    label: 'Percentage',
+                    data: [28, 18, 12, 11, 10, 9, 8, 4],
+                    backgroundColor: ['#020301', '#2a2b2d', '#3f4143', '#555759', '#666769', '#7d7e80', '#939496', '#aaabac'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 30,
+                        ticks: {
+                            callback: function(value) { return value + '%'; }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gender Chart
+        const genderCtx = document.getElementById('genderChart').getContext('2d');
+        new Chart(genderCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Male', 'Female', 'Unknown'],
+                datasets: [{
+                    data: [58, 35, 7],
+                    backgroundColor: ['#020301', '#666769', '#d1d3d4'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Company Size Chart
+        const companySizeCtx = document.getElementById('companySizeChart').getContext('2d');
+        new Chart(companySizeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Enterprise\n(10k+)', 'Large\n(1k-10k)', 'Medium\n(100-1k)', 'Small\n(10-100)', 'Startup\n(<10)'],
+                datasets: [{
+                    label: 'Percentage',
+                    data: [28, 22, 25, 15, 10],
+                    backgroundColor: ['#020301', '#3f4143', '#666769', '#939496', '#c1c2c3'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 30,
+                        ticks: {
+                            callback: function(value) { return value + '%'; }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Seniority Chart
+        const seniorityCtx = document.getElementById('seniorityChart').getContext('2d');
+        new Chart(seniorityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['C-Suite & VP (42%)', 'Manager (15%)', 'Senior IC (12%)', 'IC/Entry (19%)', 'Other (12%)'],
+                datasets: [{
+                    data: [42, 15, 12, 19, 12],
+                    backgroundColor: ['#020301', '#3f4143', '#666769', '#939496', '#c1c2c3'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 12,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
