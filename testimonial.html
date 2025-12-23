@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testimonials</title>
+    <title>Testimonials Carousel</title>
     <style>
         * {
             margin: 0;
@@ -14,123 +14,259 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background-color: #f3f5f9;
-            padding: 40px 20px;
+            padding: 60px 20px;
+            min-height: 100vh;
         }
 
-        .testimonials-container {
-            max-width: 900px;
+        .carousel-container {
+            max-width: 700px;
             margin: 0 auto;
         }
 
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+        .carousel {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            display: flex;
+            align-items: center;
+            top: 0;
+            left: 0;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
         }
 
         .testimonial-card {
             background-color: #ffffff;
-            padding: 32px;
-            border-radius: 8px;
-            border-left: 3px solid #ffdb15;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .testimonial-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(2, 3, 1, 0.08);
-        }
-
-        .stars {
+            padding: 40px;
+            width: 100%;
+            height: 100%;
             display: flex;
-            gap: 4px;
-            margin-bottom: 16px;
-        }
-
-        .star {
-            color: #ffdb15;
-            font-size: 14px;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(2, 3, 1, 0.06);
         }
 
         .quote {
             color: #020301;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            font-size: 18px;
+            line-height: 1.7;
+            margin-bottom: 30px;
             font-style: italic;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
         }
 
-        .author {
+        .author-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffdb15 0%, #8e99a2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #020301;
+            flex-shrink: 0;
+        }
+
+        .author-info {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
         }
 
         .author-name {
             color: #020301;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 16px;
         }
 
-        .author-company {
+        .author-title {
             color: #8e99a2;
             font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #8e99a2;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            opacity: 0.5;
+        }
+
+        .dot.active {
+            background-color: #020301;
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .dot:hover {
+            opacity: 0.7;
+        }
+
+        @keyframes rotate-carousel {
+            0% { opacity: 0; }
+            5% { opacity: 1; }
+            25% { opacity: 1; }
+            30% { opacity: 0; }
+            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="testimonials-container">
-        <div class="testimonials-grid">
-            <!-- Testimonial 1 -->
-            <div class="testimonial-card">
-                <div class="stars">
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                </div>
-                <p class="quote">"Jing doesn’t shy away from asking the tough questions about Generative AI. Her research and unique presentation style have already become her signature. There are so many AI papers that deserve deeper exploration, and Jing’s work consistently delivers exactly that. I genuinely enjoy following her insights.
-
-Her AI publication is one of the ones I'm watching closely. Her concise, poignant and relevant questions and answers are based a synthesis of a research based approach that is both educational and multi-layered."</p>
-                <div class="author">
-                    <span class="author-name">Sarah Johnson</span>
-                    <span class="author-company">Acme Corp</span>
+    <div class="carousel-container">
+        <div class="carousel">
+            <!-- Slide 1 -->
+            <div class="carousel-slide active">
+                <div class="testimonial-card">
+                    <p class="quote">"Jing doesn't shy away from asking the tough questions about Generative AI. Her research and unique presentation style have already become her signature."</p>
+                    <div class="author-section">
+                        <div class="avatar">J</div>
+                        <div class="author-info">
+                            <div class="author-name">Jing Hu</div>
+                            <div class="author-title">AI Researcher & Writer</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Testimonial 2 -->
-            <div class="testimonial-card">
-                <div class="stars">
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                </div>
-                <p class="quote">"I subscribe to Jin’s substack. Her in-depth analyses are complete and well researched. She sees through the BS at get at real issues. She understands AI and development very well. Plus she is a nice person, an increasing rarity in these times of ours"</p>
-                <div class="author">
-                    <span class="author-name">Michael Chen</span>
-                    <span class="author-company">Tech Ventures</span>
+            <!-- Slide 2 -->
+            <div class="carousel-slide">
+                <div class="testimonial-card">
+                    <p class="quote">"Her AI publication is one of the ones I'm watching closely. Her concise, poignant and relevant questions and answers are based on a synthesis of a research background and deep technical understanding."</p>
+                    <div class="author-section">
+                        <div class="avatar">MS</div>
+                        <div class="author-info">
+                            <div class="author-name">Michael Spencer</div>
+                            <div class="author-title">AI Publications Analyst</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Testimonial 3 -->
-            <div class="testimonial-card">
-                <div class="stars">
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
+            <!-- Slide 3 -->
+            <div class="carousel-slide">
+                <div class="testimonial-card">
+                    <p class="quote">"I subscribe to Jing's substack. Her in-depth analyses are complete and well researched. She sees through the BS at get at real issues. She understands AI and isn't your typical AI journalist."</p>
+                    <div class="author-section">
+                        <div class="avatar">DC</div>
+                        <div class="author-info">
+                            <div class="author-name">David Crouch</div>
+                            <div class="author-title">Software Engineering Leader</div>
+                        </div>
+                    </div>
                 </div>
-                <p class="quote">"Jing Hu isn’t your typical AI journalist—she spent a decade in the software trenches, and it shows. She brings a rare blend of deep technical expertise and big-picture strategic thinking that makes her writing not just informative, but genuinely illuminating. She regularly reels in professors, senior execs, and AI insiders who can’t get enough of her data-driven insights. "</p>
-                <div class="author">
-                    <span class="author-name">Emma Rodriguez</span>
-                    <span class="author-company">Design Studio</span>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="carousel-slide">
+                <div class="testimonial-card">
+                    <p class="quote">"Jing has been a tremendous contributor to the AI Advances advisory board, offering sharp insights and thoughtful guidance that have shaped the direction of our work."</p>
+                    <div class="author-section">
+                        <div class="avatar">ST</div>
+                        <div class="author-info">
+                            <div class="author-name">Shunyu (Andy) Tai</div>
+                            <div class="author-title">AI Advances Advisory Board</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5 -->
+            <div class="carousel-slide">
+                <div class="testimonial-card">
+                    <p class="quote">"As a manager of a data team who is being asked to use AI in my team's daily workflow as much as possible, I'm interested in learning more about the implications."</p>
+                    <div class="author-section">
+                        <div class="avatar">DS</div>
+                        <div class="author-info">
+                            <div class="author-name">David Simler</div>
+                            <div class="author-title">Data Team Manager</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6 -->
+            <div class="carousel-slide">
+                <div class="testimonial-card">
+                    <p class="quote">"Appreciate your thoughtful perspective, and don't want to freeload."</p>
+                    <div class="author-section">
+                        <div class="avatar">GH</div>
+                        <div class="author-info">
+                            <div class="author-name">Giles Heron</div>
+                            <div class="author-title">Industry Professional</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="carousel-controls">
+            <span class="dot active" onclick="currentSlide(0)"></span>
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+            <span class="dot" onclick="currentSlide(4)"></span>
+            <span class="dot" onclick="currentSlide(5)"></span>
+        </div>
     </div>
+
+    <script>
+        let currentIndex = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[n].classList.add('active');
+            dots[n].classList.add('active');
+        }
+
+        function currentSlide(n) {
+            currentIndex = n;
+            showSlide(currentIndex);
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            showSlide(currentIndex);
+        }
+
+        // Auto-rotate every 8 seconds (slow rotation)
+        setInterval(nextSlide, 8000);
+    </script>
 </body>
 </html>
