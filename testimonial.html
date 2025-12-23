@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonials</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f3f5f9;
+            padding: 40px 20px;
+        }
+
+        .testimonials-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            background-color: #ffffff;
+            padding: 32px;
+            border-radius: 8px;
+            border-left: 3px solid #ffdb15;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(2, 3, 1, 0.08);
+        }
+
+        .stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .star {
+            color: #ffdb15;
+            font-size: 14px;
+        }
+
+        .quote {
+            color: #020301;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .author {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .author-name {
+            color: #020301;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .author-company {
+            color: #8e99a2;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="testimonials-container">
+        <div class="testimonials-grid">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-card">
+                <div class="stars">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <p class="quote">"Jing doesn’t shy away from asking the tough questions about Generative AI. Her research and unique presentation style have already become her signature. There are so many AI papers that deserve deeper exploration, and Jing’s work consistently delivers exactly that. I genuinely enjoy following her insights.
+
+Her AI publication is one of the ones I'm watching closely. Her concise, poignant and relevant questions and answers are based a synthesis of a research based approach that is both educational and multi-layered."</p>
+                <div class="author">
+                    <span class="author-name">Sarah Johnson</span>
+                    <span class="author-company">Acme Corp</span>
+                </div>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div class="testimonial-card">
+                <div class="stars">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <p class="quote">"I subscribe to Jin’s substack. Her in-depth analyses are complete and well researched. She sees through the BS at get at real issues. She understands AI and development very well. Plus she is a nice person, an increasing rarity in these times of ours"</p>
+                <div class="author">
+                    <span class="author-name">Michael Chen</span>
+                    <span class="author-company">Tech Ventures</span>
+                </div>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="testimonial-card">
+                <div class="stars">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <p class="quote">"Jing Hu isn’t your typical AI journalist—she spent a decade in the software trenches, and it shows. She brings a rare blend of deep technical expertise and big-picture strategic thinking that makes her writing not just informative, but genuinely illuminating. She regularly reels in professors, senior execs, and AI insiders who can’t get enough of her data-driven insights. "</p>
+                <div class="author">
+                    <span class="author-name">Emma Rodriguez</span>
+                    <span class="author-company">Design Studio</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
